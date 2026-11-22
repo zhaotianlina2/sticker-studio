@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贴纸工坊 · 复古剪贴画编辑器</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header id="topbar">
+  <div class="logo">✂️ 贴纸工坊 <span class="sub">复古剪贴画编辑器</span></div>
+  <div class="top-group">
+    <label>画布</label>
+    <select id="canvas-preset">
+      <option value="1920x1080" selected>16:9 视频 (1920×1080)</option>
+      <option value="1080x1920">9:16 竖屏 (1080×1920)</option>
+      <option value="1080x1080">1:1 方形 (1080×1080)</option>
+      <option value="1620x1080">3:2 照片 (1620×1080)</option>
+      <option value="custom">自定义…</option>
+    </select>
+    <input id="canvas-w" type="number" min="200" max="6000" value="1920" class="hidden">
+    <span id="canvas-x" class="hidden">×</span>
+    <input id="canvas-h" type="number" min="200" max="6000" value="1080" class="hidden">
+  </div>
+  <div class="top-group">
+    <button id="btn-zoom-out" title="缩小视图">−</button>
+    <button id="btn-zoom-fit" title="适应窗口">适应</button>
+    <button id="btn-zoom-100" title="实际大小">100%</button>
+    <button id="btn-zoom-in" title="放大视图">+</button>
+  </div>
+  <div class="top-group">
+    <button id="btn-undo" title="撤销 (Ctrl+Z)">↩ 撤销</button>
+    <button id="btn-redo" title="重做 (Ctrl+Y)">↪ 重做</button>
+  </div>
+  <div class="spacer"></div>
+  <div id="engine-badge" class="badge" title="抠图引擎状态">抠图引擎: 待加载</div>
+</header>
+
+<main id="app">
+  <!-- 左侧工具栏 -->
+  <aside id="toolbar">
+    <section>
+      <h3>🖼 图片贴纸</h3>
+      <button id="btn-import" class="primary big">导入图片(自动抠图)</button>
+      <button id="btn-import-raw">直接导入(不抠图)</button>
+      <p class="hint">也可把图片拖进来 / Ctrl+V 粘贴</p>
+    </section>
+    <section>
+      <h3>✍️ 文字贴纸</h3>
+      <button id="btn-add-cliptext" class="big">📰 剪报字</button>
+      <button id="btn-add-bubble" class="big">💬 手写气泡</button>
+    </section>
+    <section>
+      <h3>🪄 自动排版</h3>
+      <select id="layout-preset">
+        <option value="cluster" selected>主次群组(杂志感)</option>
+        <option value="row">底部一排(主持感)</option>
+        <option value="diagonal">对角线构图</option>
+        <option value="scatter">散落拼贴</option>
+        <option value="grid">整齐网格</option>
+        <option value="ring">环绕中心</option>
+      </select>
+      <button id="btn-layout" class="primary">应用排版</button>
+      <button id="btn-layout-reroll">换一个 ↻</button>
+    </section>
+    <section>
+      <h3>🎨 画布背景</h3>
+      <label class="row"><input type="checkbox" id="bg-enabled"> 添加背景</label>
+      <label class="row">颜色 <input type="color" id="bg-color" value="#efe8d6"></label>
+      <label class="row"><input type="checkbox" id="bg-grain" checked> 纸张颗粒</label>
+    </section>
+    <section>
+      <h3>📤 导出</h3>
+      <button id="btn-export" class="primary big">导出整图 PNG</button>
+      <button id="btn-copy">复制到剪贴板</button>
+      <button id="btn-export-item">导出选中贴纸 PNG</button>
+    </section>
+  </aside>
+
+  <!-- 中央画布 -->
+  <div id="stage">
+    <canvas id="board"></canvas>
+    <div id="empty-hint">把图片拖到这里开始<br><span>导入 → 自动抠图 → 白边复古贴纸</span></div>
+    <div id="drop-overlay">松手导入图片</div>
+    <div id="queue" class="hidden"><div id="queue-text">准备中…</div><div class="bar"><div id="queue-bar"></div></div></div>
+  </div>
+
+  <!-- 右侧面板 -->
+  <aside id="inspector">
+    <section id="layers-sec">
+      <h3>🗂 图层 <span class="hint-inline">(上→下 = 前→后)</span></h3>
+      <div id="layers"></div>
+    </section>
+    <section id="props-sec" class="hidden">
+      <h3 id="props-title">属性</h3>
+      <div id="props"></div>
+    </section>
+  </aside>
+</main>
+
+<div id="toast" class="hidden"></div>
+<input type="file" id="file-input" accept="image/*" multiple hidden>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
